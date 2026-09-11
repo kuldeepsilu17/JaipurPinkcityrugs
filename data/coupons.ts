@@ -1,0 +1,48 @@
+import { Coupon } from '@/types';
+
+export const INITIAL_COUPONS: Coupon[] = [
+  {
+    id: 'coup-1',
+    code: 'WELCOME10',
+    discountType: 'percentage',
+    discountValue: 10,
+    minOrderAmount: 50,
+    expiryDate: '2026-12-31',
+    usageCount: 142,
+    description: '10% off your first handcrafted Jaipur order',
+    isActive: true,
+  },
+  {
+    id: 'coup-2',
+    code: 'JAIPUR15',
+    discountType: 'percentage',
+    discountValue: 15,
+    minOrderAmount: 200,
+    expiryDate: '2026-12-31',
+    usageCount: 88,
+    description: '15% off orders over $200',
+    isActive: true,
+  },
+  {
+    id: 'coup-3',
+    code: 'FESTIVE20',
+    discountType: 'percentage',
+    discountValue: 20,
+    minOrderAmount: 400,
+    expiryDate: '2026-12-31',
+    usageCount: 45,
+    description: '20% off luxury orders over $400',
+    isActive: true,
+  },
+  {
+    id: 'coup-4',
+    code: 'FREESHIP',
+    discountType: 'fixed',
+    discountValue: 25,
+    minOrderAmount: 150,
+    expiryDate: '2026-12-31',
+    usageCount: 63,
+    description: '$25 credit for Worldwide Express Shipping',
+    isActive: true,
+  },
+];
