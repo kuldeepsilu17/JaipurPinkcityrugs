@@ -164,22 +164,26 @@ function TrackOrderContent() {
               {/* Visual Stepper Timeline */}
               <div className="py-4">
                 <div className="relative">
-                  <div className="hidden sm:block absolute top-1/2 left-0 right-0 h-1 bg-sandstone-200 -translate-y-1/2 z-0" />
+                  {/* Desktop Horizontal Bar */}
+                  <div className="hidden sm:block absolute top-4 left-0 right-0 h-1 bg-sandstone-200 -translate-y-1/2 z-0" />
                   <div
-                    className="hidden sm:block absolute top-1/2 left-0 h-1 bg-terracotta-600 -translate-y-1/2 z-0 transition-all duration-700"
+                    className="hidden sm:block absolute top-4 left-0 h-1 bg-terracotta-600 -translate-y-1/2 z-0 transition-all duration-700"
                     style={{
                       width: `${(Math.max(0, currentStepIdx) / (TIMELINE_STEPS.length - 1)) * 100}%`,
                     }}
                   />
+
+                  {/* Mobile Vertical Bar */}
+                  <div className="sm:hidden absolute top-4 bottom-4 left-4 w-0.5 bg-sandstone-200 -translate-x-1/2 z-0" />
 
                   <div className="grid grid-cols-1 sm:grid-cols-7 gap-4 relative z-10">
                     {TIMELINE_STEPS.map((step, idx) => {
                       const isCompleted = currentStepIdx >= idx;
                       const isCurrent = currentStepIdx === idx;
                       return (
-                        <div key={step} className="flex sm:flex-col items-center sm:text-center space-x-3 sm:space-x-0">
+                        <div key={step} className="flex sm:flex-col items-center sm:text-center space-x-3 sm:space-x-0 relative">
                           <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all shrink-0 ${
                               isCompleted
                                 ? 'bg-terracotta-600 text-white shadow-md'
                                 : 'bg-sandstone-200 text-sandstone-600'
@@ -187,7 +191,7 @@ function TrackOrderContent() {
                           >
                             {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
                           </div>
-                          <span className={`text-[11px] font-semibold mt-1.5 ${isCurrent ? 'text-terracotta-700 font-bold' : 'text-warmbrown-800'}`}>
+                          <span className={`text-xs sm:text-[11px] font-semibold sm:mt-1.5 ${isCurrent ? 'text-terracotta-700 font-bold' : 'text-warmbrown-800'}`}>
                             {step}
                           </span>
                         </div>

@@ -22,49 +22,47 @@ export const MobileBottomBar: React.FC = () => {
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-cream-50/95 backdrop-blur-md border-t border-sandstone-200 py-2 px-3 shadow-lg"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-cream-50/95 backdrop-blur-md border-t border-sandstone-200 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] px-3 shadow-lg"
     >
       <div className="flex items-center justify-around">
         <Link
           href="/"
-          className={`flex flex-col items-center space-y-0.5 text-[10px] font-medium transition-colors ${
+          className={`flex flex-col items-center justify-center min-w-[50px] py-1 text-[10px] font-medium transition-colors ${
             isActive('/') ? 'text-terracotta-600 font-bold' : 'text-warmbrown-700 hover:text-terracotta-600'
           }`}
         >
-          <Home className="w-5 h-5" />
+          <Home className="w-5 h-5 mb-0.5" />
           <span>Home</span>
         </Link>
 
         <Link
           href="/shop"
-          className={`flex flex-col items-center space-y-0.5 text-[10px] font-medium transition-colors ${
+          className={`flex flex-col items-center justify-center min-w-[50px] py-1 text-[10px] font-medium transition-colors ${
             isActive('/shop') ? 'text-terracotta-600 font-bold' : 'text-warmbrown-700 hover:text-terracotta-600'
           }`}
         >
-          <Compass className="w-5 h-5" />
+          <Compass className="w-5 h-5 mb-0.5" />
           <span>Shop</span>
         </Link>
 
         <Link
           href="/custom-rugs"
-          className={`flex flex-col items-center space-y-0.5 text-[10px] font-medium transition-colors ${
+          className={`flex flex-col items-center justify-center min-w-[50px] py-1 text-[10px] font-medium transition-colors ${
             isActive('/custom-rugs') ? 'text-terracotta-600 font-bold' : 'text-warmbrown-700 hover:text-terracotta-600'
           }`}
         >
-          <div className="relative">
-            <Sparkles className="w-5 h-5 text-ochre-500" />
-          </div>
+          <Sparkles className="w-5 h-5 mb-0.5 text-ochre-500" />
           <span>Custom</span>
         </Link>
 
         <Link
           href="/wishlist"
-          className={`flex flex-col items-center space-y-0.5 text-[10px] font-medium transition-colors relative ${
+          className={`flex flex-col items-center justify-center min-w-[50px] py-1 text-[10px] font-medium transition-colors relative ${
             isActive('/wishlist') ? 'text-terracotta-600 font-bold' : 'text-warmbrown-700 hover:text-terracotta-600'
           }`}
         >
           <div className="relative">
-            <Heart className="w-5 h-5" />
+            <Heart className="w-5 h-5 mb-0.5" />
             {wishlistCount > 0 && (
               <span className="absolute -top-1 -right-2 bg-jaipur-500 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
                 {wishlistCount}
@@ -76,11 +74,11 @@ export const MobileBottomBar: React.FC = () => {
 
         <button
           onClick={() => setIsCartOpen(true)}
-          className="flex flex-col items-center space-y-0.5 text-[10px] font-medium text-warmbrown-700 hover:text-terracotta-600 relative"
+          className="flex flex-col items-center justify-center min-w-[50px] py-1 text-[10px] font-medium text-warmbrown-700 hover:text-terracotta-600 relative"
           aria-label="Open Cart"
         >
           <div className="relative">
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-5 h-5 mb-0.5" />
             {itemCount > 0 && (
               <span className="absolute -top-1 -right-2 bg-terracotta-600 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
                 {itemCount}

@@ -53,28 +53,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Admin Body */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Admin Sidebar Navigation (3 cols) */}
-          <nav aria-label="Admin Navigation" className="lg:col-span-3 bg-white rounded-2xl border border-sandstone-200/90 shadow-subtle p-4 space-y-1 text-xs font-semibold self-start sticky top-6">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all ${
-                    isActive
-                      ? 'bg-terracotta-50 text-terracotta-700 font-bold border border-terracotta-200 shadow-sm'
-                      : 'text-warmbrown-800 hover:bg-sandstone-50'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-terracotta-600' : 'text-sandstone-500'}`} />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+          {/* Admin Navigation: Horizontal pills on mobile, Vertical sidebar on desktop */}
+          <nav aria-label="Admin Navigation" className="lg:col-span-3 bg-white rounded-2xl border border-sandstone-200/90 shadow-subtle p-3 sm:p-4 text-xs font-semibold self-start lg:sticky lg:top-6 overflow-x-auto">
+            <div className="flex lg:flex-col gap-1.5 min-w-max lg:min-w-0">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center space-x-2 sm:space-x-3 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl transition-all whitespace-nowrap ${
+                      isActive
+                        ? 'bg-terracotta-50 text-terracotta-700 font-bold border border-terracotta-200 shadow-sm'
+                        : 'text-warmbrown-800 hover:bg-sandstone-50'
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-terracotta-600' : 'text-sandstone-500'}`} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
 
-            <div className="pt-4 mt-4 border-t border-sandstone-100 text-[11px] text-sandstone-500 space-y-1 px-3">
+            <div className="hidden lg:block pt-4 mt-4 border-t border-sandstone-100 text-[11px] text-sandstone-500 space-y-1 px-3">
               <div className="flex items-center space-x-1 text-emerald-700 font-bold">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Admin Demo Mode Active</span>

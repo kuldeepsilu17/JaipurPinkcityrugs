@@ -32,9 +32,29 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
     setSelectedIdx((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  // Handle ESC key and scroll lock for lightbox
+  React.useEffect(() => {
+    if (!isLightboxOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsLightboxOpen(false);
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isLightboxOpen]);
+
   return (
     <>
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Main Stage View */}
         <div
           className="relative aspect-[4/5] sm:aspect-square w-full rounded-2xl overflow-hidden bg-sandstone-100 border border-sandstone-200/80 shadow-subtle group cursor-crosshair"
@@ -64,7 +84,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
           {/* Lightbox / Fullscreen Trigger */}
           <button
             onClick={() => setIsLightboxOpen(true)}
-            className="absolute top-3 right-3 p-2.5 rounded-full bg-white/80 hover:bg-white text-warmbrown-800 backdrop-blur-md shadow-md transition-all z-10"
+            className="absolute top-3 right-3 p-2.5 rounded-full bg-white/85 hover:bg-white text-warmbrown-800 backdrop-blur-md shadow-md transition-all z-10 touch-target"
             aria-label="Expand Fullscreen"
             title="Fullscreen View"
           >
@@ -74,25 +94,26 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
           {/* Zoom Tip */}
           <div className="absolute bottom-3 left-3 bg-warmbrown-900/70 backdrop-blur-sm text-cream-50 text-[10px] px-2.5 py-1 rounded-full flex items-center space-x-1 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
             <ZoomIn className="w-3 h-3" />
-            <span>Hover to zoom weave details</span>
+            <span className="hidden sm:inline">Hover to zoom weave details</span>
+            <span className="sm:hidden">Tap to inspect</span>
           </div>
 
-          {/* Mobile Arrows */}
+          {/* Mobile Navigation Arrows */}
           {images.length > 1 && (
             <div className="md:hidden">
               <button
                 onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 text-warmbrown-900 shadow-md"
+                className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/85 text-warmbrown-900 shadow-md touch-target"
                 aria-label="Previous image"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 text-warmbrown-900 shadow-md"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/85 text-warmbrown-900 shadow-md touch-target"
                 aria-label="Next image"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           )}
@@ -100,12 +121,12 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
 
         {/* Thumbnail Carousel */}
         {images.length > 1 && (
-          <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex space-x-2 sm:space-x-3 overflow-x-auto pb-1 scrollbar-none">
             {images.map((img, idx) => (
               <button
                 key={idx}
                 onClick={() => setSelectedIdx(idx)}
-                className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
+                className={`relative w-16 h-16 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
                   selectedIdx === idx
                     ? 'border-terracotta-600 ring-2 ring-terracotta-200 scale-95'
                     : 'border-transparent opacity-70 hover:opacity-100 hover:border-sandstone-300'
@@ -125,10 +146,10 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
 
       {/* Fullscreen Lightbox Modal */}
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-50 bg-warmbrown-950/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-warmbrown-950/95 backdrop-blur-md flex items-center justify-center p-2 sm:p-4">
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-5 right-5 p-3 text-cream-100 hover:text-white rounded-full bg-warmbrown-800/80 hover:bg-warmbrown-700 transition-colors z-20"
+            className="absolute top-4 right-4 p-3 text-cream-100 hover:text-white rounded-full bg-warmbrown-800/80 hover:bg-warmbrown-700 transition-colors z-20 touch-target"
             aria-label="Close Lightbox"
           >
             <X className="w-6 h-6" />
@@ -136,7 +157,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
 
           <button
             onClick={prevImage}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-warmbrown-800/80 hover:bg-warmbrown-700 text-cream-100 transition-colors z-20"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2.5 sm:p-3 rounded-full bg-warmbrown-800/80 hover:bg-warmbrown-700 text-cream-100 transition-colors z-20 touch-target"
             aria-label="Previous Image"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -155,13 +176,13 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
 
           <button
             onClick={nextImage}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-warmbrown-800/80 hover:bg-warmbrown-700 text-cream-100 transition-colors z-20"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2.5 sm:p-3 rounded-full bg-warmbrown-800/80 hover:bg-warmbrown-700 text-cream-100 transition-colors z-20 touch-target"
             aria-label="Next Image"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
 
-          <div className="absolute bottom-5 text-center text-xs text-sandstone-400 font-medium">
+          <div className="absolute bottom-4 text-center text-xs text-sandstone-400 font-medium">
             {selectedIdx + 1} of {images.length} — {productName}
           </div>
         </div>

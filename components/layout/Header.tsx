@@ -22,22 +22,78 @@ export const Header: React.FC = () => {
     <>
       <header className="bg-cream-50/95 backdrop-blur-md sticky top-0 z-40 border-b border-sandstone-200 transition-all">
         {/* Main Header Bar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center justify-between gap-4">
-            {/* Left: Mobile Menu Trigger & Currency */}
-            <div className="flex items-center space-x-3 lg:w-1/4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
+          {/* Mobile Header View (< lg) */}
+          <div className="flex lg:hidden items-center justify-between gap-2">
+            {/* Left: Brand Logo */}
+            <Link href="/" className="flex flex-col min-w-0 pr-2">
+              <span className="font-serif text-lg sm:text-2xl font-bold tracking-wide text-warmbrown-900 uppercase truncate">
+                JaipurPinkCityRugs
+              </span>
+              <span className="text-[9px] sm:text-[10px] font-sans uppercase tracking-widest text-sandstone-600 truncate">
+                Jaipur • Handmade Flatweaves
+              </span>
+            </Link>
+
+            {/* Right: Search, Wishlist, Cart, Menu Hamburger */}
+            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
+              {/* Search Trigger */}
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 text-warmbrown-800 hover:text-terracotta-600 rounded-full transition-colors touch-target"
+                aria-label="Search Products"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+
+              {/* Wishlist Link */}
+              <Link
+                href="/wishlist"
+                className="p-2 text-warmbrown-800 hover:text-terracotta-600 rounded-full transition-colors relative touch-target"
+                aria-label="Wishlist"
+                title="Wishlist"
+              >
+                <Heart className="w-5 h-5" />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-1 right-1 bg-jaipur-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-scale">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Cart Drawer Trigger */}
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="p-2 text-warmbrown-800 hover:text-terracotta-600 rounded-full transition-colors relative touch-target"
+                aria-label="Open Cart"
+              >
+                <ShoppingBag className="w-5 h-5 text-warmbrown-900" />
+                {itemCount > 0 && (
+                  <span className="absolute top-1 right-1 bg-terracotta-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-scale">
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Menu Hamburger */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 text-warmbrown-800 hover:text-terracotta-600 rounded-md focus:outline-none"
+                className="p-2 text-warmbrown-900 hover:text-terracotta-600 rounded-md transition-colors touch-target"
                 aria-label="Open Mobile Menu"
               >
                 <Menu className="w-6 h-6" />
               </button>
+            </div>
+          </div>
 
-              <div className="hidden sm:flex items-center space-x-2">
-                <label htmlFor="currency-select" className="sr-only">Select Currency</label>
+          {/* Desktop Header View (>= lg) */}
+          <div className="hidden lg:flex items-center justify-between gap-4">
+            {/* Left: Currency & Bespoke */}
+            <div className="flex items-center space-x-3 w-1/4">
+              <div className="flex items-center space-x-2">
+                <label htmlFor="currency-select-desktop" className="sr-only">Select Currency</label>
                 <select
-                  id="currency-select"
+                  id="currency-select-desktop"
                   aria-label="Currency"
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
@@ -53,49 +109,46 @@ export const Header: React.FC = () => {
 
               <Link
                 href="/custom-rugs"
-                className="hidden xl:inline-flex items-center text-xs font-semibold uppercase tracking-wider text-terracotta-600 hover:text-terracotta-700 bg-terracotta-50 px-2.5 py-1 rounded border border-terracotta-200 transition-colors"
+                className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-terracotta-600 hover:text-terracotta-700 bg-terracotta-50 px-2.5 py-1 rounded border border-terracotta-200 transition-colors"
               >
                 Bespoke Orders
               </Link>
             </div>
 
             {/* Center: Brand Identity */}
-            <div className="flex-1 text-center lg:w-2/4">
+            <div className="w-2/4 text-center">
               <Link href="/" className="inline-block group">
-                <span className="block font-serif text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider text-warmbrown-900 group-hover:text-terracotta-700 transition-colors uppercase">
+                <span className="block font-serif text-3xl xl:text-4xl font-bold tracking-wider text-warmbrown-900 group-hover:text-terracotta-700 transition-colors uppercase">
                   JaipurPinkCityRugs
                 </span>
-                <span className="block text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-[0.25em] text-sandstone-700">
+                <span className="block text-[11px] font-sans font-medium uppercase tracking-[0.25em] text-sandstone-700">
                   Handcrafted In Rajasthan • Est. Jaipur
                 </span>
               </Link>
             </div>
 
             {/* Right: Search, Account, Wishlist, Cart */}
-            <div className="flex items-center justify-end space-x-3 sm:space-x-5 lg:w-1/4">
-              {/* Search Bar / Button */}
+            <div className="flex items-center justify-end space-x-4 w-1/4">
               <button
                 onClick={() => setIsSearchOpen(true)}
                 className="flex items-center space-x-2 text-warmbrown-800 hover:text-terracotta-600 p-2 rounded-full transition-colors group"
                 aria-label="Search Products"
               >
                 <Search className="w-5 h-5 text-warmbrown-700 group-hover:text-terracotta-600 transition-colors" />
-                <span className="hidden md:inline text-xs text-sandstone-600 group-hover:text-terracotta-600 font-medium">
+                <span className="text-xs text-sandstone-600 group-hover:text-terracotta-600 font-medium">
                   Search...
                 </span>
               </button>
 
-              {/* Account Link */}
               <Link
                 href="/account"
-                className="hidden sm:flex items-center text-warmbrown-800 hover:text-terracotta-600 p-2 transition-colors relative"
+                className="flex items-center text-warmbrown-800 hover:text-terracotta-600 p-2 transition-colors relative"
                 aria-label="My Account"
                 title="Account"
               >
                 <User className="w-5 h-5" />
               </Link>
 
-              {/* Wishlist Link with Badge */}
               <Link
                 href="/wishlist"
                 className="flex items-center text-warmbrown-800 hover:text-terracotta-600 p-2 transition-colors relative"
@@ -110,13 +163,12 @@ export const Header: React.FC = () => {
                 )}
               </Link>
 
-              {/* Cart Button with Drawer Trigger */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="flex items-center space-x-1.5 bg-warmbrown-900 hover:bg-terracotta-600 text-cream-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full transition-all shadow-sm"
+                className="flex items-center space-x-1.5 bg-warmbrown-900 hover:bg-terracotta-600 text-cream-50 px-4 py-2 rounded-full transition-all shadow-sm"
                 aria-label="Open Cart"
               >
-                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-ochre-300" />
+                <ShoppingBag className="w-4 h-4 text-ochre-300" />
                 <span className="text-xs sm:text-sm font-semibold tracking-wide">
                   {itemCount}
                 </span>

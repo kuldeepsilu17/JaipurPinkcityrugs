@@ -150,13 +150,13 @@ export default function CheckoutPage() {
           {/* Left: Multi-Step Forms (7 cols) */}
           <div className="lg:col-span-7 space-y-8">
             {/* Step 1: Customer Contact */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-sandstone-200 shadow-subtle space-y-4">
-              <div className="flex items-center space-x-2 text-sm font-bold uppercase tracking-wider text-warmbrown-900 pb-2 border-b border-sandstone-100">
+            <div className="bg-white p-4 sm:p-8 rounded-2xl border border-sandstone-200 shadow-subtle space-y-4">
+              <div className="flex items-center space-x-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-warmbrown-900 pb-2 border-b border-sandstone-100">
                 <span className="w-5 h-5 rounded-full bg-terracotta-600 text-white text-xs flex items-center justify-center">1</span>
                 <span>Customer Contact Information</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-1">
                     First Name *
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     placeholder="Catherine"
-                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                     required
                   />
                 </div>
@@ -181,16 +181,16 @@ export default function CheckoutPage() {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     placeholder="Vance"
-                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                     required
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-1">
-                    Email Address (For Invoice & Tracking) *
+                    Email Address *
                   </label>
                   <input
                     type="email"
@@ -198,13 +198,13 @@ export default function CheckoutPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="catherine.vance@example.com"
-                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-1">
-                    Phone / WhatsApp Number *
+                    Phone / WhatsApp *
                   </label>
                   <input
                     type="tel"
@@ -212,7 +212,7 @@ export default function CheckoutPage() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+1 (415) 555-0192"
-                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                     required
                   />
                 </div>
@@ -220,8 +220,8 @@ export default function CheckoutPage() {
             </div>
 
             {/* Step 2: Shipping Destination */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-sandstone-200 shadow-subtle space-y-4">
-              <div className="flex items-center space-x-2 text-sm font-bold uppercase tracking-wider text-warmbrown-900 pb-2 border-b border-sandstone-100">
+            <div className="bg-white p-4 sm:p-8 rounded-2xl border border-sandstone-200 shadow-subtle space-y-4">
+              <div className="flex items-center space-x-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-warmbrown-900 pb-2 border-b border-sandstone-100">
                 <span className="w-5 h-5 rounded-full bg-terracotta-600 text-white text-xs flex items-center justify-center">2</span>
                 <span>Shipping Address</span>
               </div>
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
                   name="country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                  className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px] cursor-pointer"
                 >
                   <option value="United States">United States</option>
                   <option value="United Kingdom">United Kingdom</option>
@@ -259,7 +259,7 @@ export default function CheckoutPage() {
                   value={formData.addressLine1}
                   onChange={handleInputChange}
                   placeholder="742 Evergreen Terrace"
-                  className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                  className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                   required
                 />
               </div>
@@ -274,11 +274,11 @@ export default function CheckoutPage() {
                   value={formData.addressLine2}
                   onChange={handleInputChange}
                   placeholder="Apt 4B"
-                  className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                  className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-1">
                     City *
@@ -289,7 +289,7 @@ export default function CheckoutPage() {
                     value={formData.city}
                     onChange={handleInputChange}
                     placeholder="Seattle"
-                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                     required
                   />
                 </div>
@@ -303,7 +303,7 @@ export default function CheckoutPage() {
                     value={formData.state}
                     onChange={handleInputChange}
                     placeholder="WA"
-                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                     required
                   />
                 </div>
@@ -317,7 +317,7 @@ export default function CheckoutPage() {
                     value={formData.postalCode}
                     onChange={handleInputChange}
                     placeholder="98101"
-                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2.5 rounded-lg focus:outline-none focus:border-terracotta-500"
+                    className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-3 rounded-xl focus:outline-none focus:border-terracotta-500 min-h-[44px]"
                     required
                   />
                 </div>

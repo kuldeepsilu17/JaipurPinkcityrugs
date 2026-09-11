@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { X, Star, ShoppingBag, Heart, ArrowRight, Check, MessageCircle, ShieldCheck, Truck } from 'lucide-react';
@@ -33,6 +33,24 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen,
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
+  // Handle ESC key and scroll locking
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const isFavorited = isInWishlist(product.id);
@@ -49,20 +67,21 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen,
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-8">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-warmbrown-950/70 backdrop-blur-sm transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-4xl bg-cream-50 rounded-2xl shadow-2xl border border-sandstone-300 overflow-hidden z-10 max-h-[90vh] flex flex-col md:flex-row animate-scale">
+      <div className="relative w-full max-w-4xl bg-cream-50 rounded-2xl shadow-2xl border border-sandstone-300 overflow-hidden z-10 max-h-[92vh] flex flex-col md:flex-row animate-scale">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 text-warmbrown-800 hover:text-terracotta-600 bg-white/80 hover:bg-white rounded-full shadow-sm transition-colors"
-          aria-label="Close"
+          className="absolute top-3 right-3 z-20 p-2 text-warmbrown-800 hover:text-terracotta-600 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors touch-target"
+          aria-label="Close Quick View"
         >
           <X className="w-5 h-5" />
         </button>
@@ -147,7 +166,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen,
               <label className="block text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">
                 Select Rug Size: <span className="font-semibold text-terracotta-600">{selectedVariant.size}</span>
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {product.variants.map((variant) => (
                   <button
                     key={variant.id}

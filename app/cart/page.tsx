@@ -131,8 +131,8 @@ export default function CartPage() {
             {/* Cart Items Cards */}
             <div className="bg-white rounded-2xl border border-sandstone-200/90 shadow-subtle divide-y divide-sandstone-200 overflow-hidden">
               {cart.map((item) => (
-                <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-center space-x-4">
+                <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                  <div className="flex items-start space-x-3.5 sm:space-x-4 w-full sm:w-auto">
                     <div className="relative w-20 h-24 sm:w-24 sm:h-28 rounded-xl overflow-hidden bg-sandstone-100 shrink-0">
                       <Image
                         src={item.product.images[0]}
@@ -141,13 +141,13 @@ export default function CartPage() {
                         className="object-cover"
                       />
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <div className="text-[10px] font-semibold text-terracotta-600 uppercase tracking-wider">
                         {item.product.categoryName} • {item.product.origin.split(',')[0]}
                       </div>
                       <Link
                         href={`/product/${item.product.slug}`}
-                        className="font-serif font-bold text-base sm:text-lg text-warmbrown-900 hover:text-terracotta-700 leading-snug"
+                        className="font-serif font-bold text-sm sm:text-lg text-warmbrown-900 hover:text-terracotta-700 leading-snug line-clamp-2"
                       >
                         {item.product.name}
                       </Link>
@@ -157,13 +157,13 @@ export default function CartPage() {
                           <span> • Color: <span className="font-semibold text-warmbrown-800">{item.selectedColor}</span></span>
                         )}
                       </div>
-                      <div className="text-sm font-bold text-warmbrown-900 mt-1 sm:hidden">
+                      <div className="text-xs font-bold text-warmbrown-900 mt-1 sm:hidden">
                         {formatPrice(item.selectedVariant.price)} each
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-sandstone-100">
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-sandstone-100">
                     <div className="hidden sm:block text-right">
                       <div className="font-serif text-lg font-bold text-warmbrown-900">
                         {formatPrice(item.selectedVariant.price * item.quantity)}
@@ -173,34 +173,42 @@ export default function CartPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto justify-between sm:justify-end">
                       {/* Stepper */}
-                      <div className="flex items-center border border-sandstone-300 rounded-lg bg-sandstone-50">
+                      <div className="flex items-center border border-sandstone-300 rounded-lg bg-sandstone-50 overflow-hidden">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="px-2.5 py-1 text-warmbrown-700 hover:text-terracotta-600"
+                          className="px-3 py-1.5 text-warmbrown-700 hover:text-terracotta-600 touch-target font-bold"
+                          aria-label="Decrease quantity"
                         >
-                          <Minus className="w-3 h-3" />
+                          <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="px-3 text-xs font-bold text-warmbrown-900">
+                        <span className="px-2 text-xs font-bold text-warmbrown-900 min-w-[24px] text-center">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="px-2.5 py-1 text-warmbrown-700 hover:text-terracotta-600"
+                          className="px-3 py-1.5 text-warmbrown-700 hover:text-terracotta-600 touch-target font-bold"
+                          aria-label="Increase quantity"
                         >
-                          <Plus className="w-3 h-3" />
+                          <Plus className="w-3.5 h-3.5" />
                         </button>
                       </div>
 
-                      {/* Remove */}
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-sandstone-400 hover:text-red-500 p-1.5 transition-colors"
-                        title="Remove item"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      {/* Line Item Total (mobile) & Remove */}
+                      <div className="flex items-center space-x-2">
+                        <span className="sm:hidden font-serif font-bold text-sm text-warmbrown-900">
+                          {formatPrice(item.selectedVariant.price * item.quantity)}
+                        </span>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-sandstone-400 hover:text-red-500 p-2 transition-colors touch-target"
+                          aria-label="Remove item"
+                          title="Remove item"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -210,7 +218,7 @@ export default function CartPage() {
             <div className="flex items-center justify-between pt-2 text-xs">
               <Link
                 href="/shop"
-                className="inline-flex items-center space-x-1.5 text-warmbrown-800 hover:text-terracotta-600 font-semibold"
+                className="inline-flex items-center space-x-1.5 text-warmbrown-800 hover:text-terracotta-600 font-semibold touch-target"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Continue Shopping</span>

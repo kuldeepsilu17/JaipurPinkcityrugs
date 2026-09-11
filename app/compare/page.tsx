@@ -67,10 +67,14 @@ export default function ComparePage() {
           </Link>
         </div>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-3xl border border-sandstone-200 shadow-luxury">
-          <table className="w-full text-xs text-left border-collapse min-w-[700px]">
-            <thead>
-              <tr className="border-b border-sandstone-200 bg-sandstone-50">
+        <div className="space-y-2">
+          <div className="sm:hidden text-center text-[11px] text-terracotta-700 bg-terracotta-50 py-1.5 px-3 rounded-lg font-medium border border-terracotta-100 flex items-center justify-center space-x-1">
+            <span>← Swipe left/right to compare all specs →</span>
+          </div>
+          <div className="overflow-x-auto bg-white rounded-2xl sm:rounded-3xl border border-sandstone-200 shadow-luxury">
+            <table className="w-full text-xs text-left border-collapse min-w-[580px] sm:min-w-[700px]">
+              <thead>
+                <tr className="border-b border-sandstone-200 bg-sandstone-50">
                 <th className="p-4 w-48 font-bold text-warmbrown-900 uppercase tracking-wider">Features</th>
                 {compareProducts.map((product) => (
                   <th key={product.id} className="p-4 text-center w-64 relative">
@@ -149,6 +153,7 @@ export default function ComparePage() {
             </tbody>
           </table>
         </div>
+      </div>
       )}
     </div>
   );

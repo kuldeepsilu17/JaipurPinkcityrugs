@@ -587,98 +587,219 @@ function ShopContent() {
       </div>
 
       {/* ========================================================================= */}
-      {/* MOBILE FILTER BOTTOM SHEET DRAWER                                         */}
+      {/* MOBILE FILTER BOTTOM SHEET / DRAWER                                       */}
       {/* ========================================================================= */}
       {isMobileFilterOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden justify-end">
           <div
-            className="fixed inset-0 bg-warmbrown-950/70 backdrop-blur-sm"
+            className="fixed inset-0 bg-warmbrown-950/70 backdrop-blur-sm transition-opacity"
             onClick={() => setIsMobileFilterOpen(false)}
+            aria-hidden="true"
           />
 
-          <div className="relative w-full max-w-sm bg-cream-50 h-full shadow-2xl flex flex-col justify-between z-10 animate-slide-left">
+          <div className="relative w-full max-w-sm sm:max-w-md bg-cream-50 h-full shadow-2xl flex flex-col justify-between z-10 animate-slide-right overflow-hidden">
+            {/* Drawer Header */}
             <div className="p-4 border-b border-sandstone-200 flex items-center justify-between bg-cream-100">
-              <h3 className="font-serif font-bold text-lg text-warmbrown-900">
-                Filters
-              </h3>
+              <div>
+                <h3 className="font-serif font-bold text-lg text-warmbrown-900">
+                  Filter Rugs & Décor
+                </h3>
+                <span className="text-[10px] text-sandstone-600">
+                  {sortedProducts.length} items match criteria
+                </span>
+              </div>
               <button
                 onClick={() => setIsMobileFilterOpen(false)}
-                className="p-1.5 text-warmbrown-700 hover:text-terracotta-600 rounded-full"
+                className="p-2 text-warmbrown-700 hover:text-terracotta-600 rounded-full hover:bg-sandstone-200/50 touch-target"
+                aria-label="Close Filters"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-6">
+            {/* Scrollable Filter Facets */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-6">
               {/* Category */}
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">Category</h4>
                 <div className="space-y-1 text-xs">
                   <button
                     onClick={() => setSelectedCategory('all')}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-lg ${selectedCategory === 'all' ? 'bg-terracotta-50 text-terracotta-700 font-bold' : ''}`}
+                    className={`w-full text-left px-3 py-2 rounded-lg flex justify-between ${
+                      selectedCategory === 'all'
+                        ? 'bg-terracotta-50 text-terracotta-700 font-bold border border-terracotta-200'
+                        : 'text-warmbrown-800 hover:bg-sandstone-100'
+                    }`}
                   >
-                    All Collections
+                    <span>All Collections</span>
+                    <span className="text-sandstone-400">{products.length}</span>
                   </button>
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.slug)}
-                      className={`w-full text-left px-2.5 py-1.5 rounded-lg ${selectedCategory === cat.slug ? 'bg-terracotta-50 text-terracotta-700 font-bold' : ''}`}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex justify-between ${
+                        selectedCategory === cat.slug
+                          ? 'bg-terracotta-50 text-terracotta-700 font-bold border border-terracotta-200'
+                          : 'text-warmbrown-800 hover:bg-sandstone-100'
+                      }`}
                     >
-                      {cat.name}
+                      <span>{cat.name}</span>
+                      <span className="text-sandstone-400">{cat.itemCount}</span>
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* Price Slider */}
+              <div className="pt-4 border-t border-sandstone-200">
+                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">
+                  <span>Max Price:</span>
+                  <span className="text-terracotta-600 font-mono text-sm">{formatPrice(priceRange)}</span>
+                </div>
+                <input
+                  type="range"
+                  min="30"
+                  max="1500"
+                  step="20"
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(Number(e.target.value))}
+                  className="w-full accent-terracotta-600 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-sandstone-500 mt-1">
+                  <span>{formatPrice(30)}</span>
+                  <span>{formatPrice(1500)}</span>
                 </div>
               </div>
 
               {/* Sizes */}
               <div className="pt-4 border-t border-sandstone-200">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">Sizes</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">Rug Size</h4>
                 <div className="grid grid-cols-2 gap-1.5 text-xs">
-                  {SIZE_OPTIONS.map((size) => (
-                    <button
-                      key={size.value}
-                      onClick={() => toggleSize(size.value)}
-                      className={`py-1.5 px-2 rounded-lg border text-center ${selectedSizes.includes(size.value) ? 'border-terracotta-600 bg-terracotta-50 text-terracotta-700 font-bold' : 'border-sandstone-300'}`}
-                    >
-                      {size.short}
-                    </button>
-                  ))}
+                  {SIZE_OPTIONS.map((size) => {
+                    const isSelected = selectedSizes.includes(size.value);
+                    return (
+                      <button
+                        key={size.value}
+                        onClick={() => toggleSize(size.value)}
+                        className={`py-2 px-2.5 rounded-lg border text-center transition-all ${
+                          isSelected
+                            ? 'border-terracotta-600 bg-terracotta-50 text-terracotta-700 font-bold'
+                            : 'border-sandstone-300 text-warmbrown-800 hover:border-sandstone-400'
+                        }`}
+                      >
+                        {size.short}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Colors */}
+              <div className="pt-4 border-t border-sandstone-200">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">Color Palette</h4>
+                <div className="grid grid-cols-2 gap-1.5 text-xs">
+                  {COLOR_OPTIONS.map((col) => {
+                    const isSelected = selectedColors.includes(col.name);
+                    return (
+                      <button
+                        key={col.name}
+                        onClick={() => toggleColor(col.name)}
+                        className={`flex items-center justify-between p-2 rounded-lg border text-xs transition-colors ${
+                          isSelected ? 'border-terracotta-600 bg-sandstone-100 font-bold' : 'border-sandstone-200 hover:bg-sandstone-50'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-1.5 truncate">
+                          <span
+                            className="w-3 h-3 rounded-full border border-sandstone-300 shrink-0"
+                            style={{ background: col.hex }}
+                          />
+                          <span className="truncate">{col.name.split('&')[0]}</span>
+                        </div>
+                        {isSelected && <Check className="w-3 h-3 text-terracotta-600 shrink-0" />}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Materials */}
               <div className="pt-4 border-t border-sandstone-200">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">Materials</h4>
-                <div className="space-y-1 text-xs">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">Fiber & Material</h4>
+                <div className="space-y-1.5 text-xs">
                   {MATERIAL_OPTIONS.map((mat) => (
-                    <label key={mat.value} className="flex items-center space-x-2 py-1">
+                    <label key={mat.value} className="flex items-center space-x-2 py-1 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={selectedMaterials.includes(mat.value)}
                         onChange={() => toggleMaterial(mat.value)}
-                        className="rounded border-sandstone-300 text-terracotta-600"
+                        className="rounded border-sandstone-300 text-terracotta-600 focus:ring-terracotta-500"
                       />
                       <span>{mat.label}</span>
                     </label>
                   ))}
                 </div>
               </div>
+
+              {/* Styles */}
+              <div className="pt-4 border-t border-sandstone-200">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-2">Aesthetic Style</h4>
+                <div className="flex flex-wrap gap-1.5 text-xs">
+                  {STYLES.map((st) => {
+                    const isSelected = selectedStyles.includes(st.name.split(' ')[0]);
+                    return (
+                      <button
+                        key={st.id}
+                        onClick={() => toggleStyle(st.name.split(' ')[0])}
+                        className={`px-3 py-1.5 rounded-full border transition-all ${
+                          isSelected
+                            ? 'border-terracotta-600 bg-terracotta-50 text-terracotta-700 font-bold'
+                            : 'border-sandstone-300 text-warmbrown-800'
+                        }`}
+                      >
+                        {st.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Quick Toggles */}
+              <div className="pt-4 border-t border-sandstone-200 space-y-2 text-xs">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={onSaleOnly}
+                    onChange={(e) => setOnSaleOnly(e.target.checked)}
+                    className="rounded border-sandstone-300 text-terracotta-600"
+                  />
+                  <span className="font-semibold text-terracotta-700">On Sale Discounts Only</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={inStockOnly}
+                    onChange={(e) => setInStockOnly(e.target.checked)}
+                    className="rounded border-sandstone-300 text-terracotta-600"
+                  />
+                  <span>In-Stock Ready to Ship</span>
+                </label>
+              </div>
             </div>
 
-            <div className="p-4 border-t border-sandstone-200 bg-white flex space-x-3">
+            {/* Bottom Actions */}
+            <div className="p-4 border-t border-sandstone-200 bg-white flex space-x-3 pb-safe">
               <button
                 onClick={resetAllFilters}
-                className="flex-1 py-3 border border-sandstone-300 text-xs font-bold uppercase rounded-xl"
+                className="flex-1 py-3 border border-sandstone-300 text-xs font-bold uppercase rounded-xl hover:bg-sandstone-100 transition-colors touch-target"
               >
-                Reset
+                Clear All
               </button>
               <button
                 onClick={() => setIsMobileFilterOpen(false)}
-                className="flex-1 py-3 bg-terracotta-600 text-white text-xs font-bold uppercase rounded-xl shadow-md"
+                className="flex-1 py-3 bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-bold uppercase rounded-xl shadow-md transition-colors touch-target"
               >
-                Apply ({sortedProducts.length})
+                Apply Filters ({sortedProducts.length})
               </button>
             </div>
           </div>

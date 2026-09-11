@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Sparkles, Tag, ShieldCheck } from 'lucide-react';
@@ -28,6 +28,24 @@ export const CartDrawer: React.FC = () => {
   const { formatPrice } = useCurrency();
   const [couponInput, setCouponInput] = useState('');
 
+  // Handle ESC key and scroll locking
+  useEffect(() => {
+    if (!isCartOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsCartOpen(false);
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isCartOpen, setIsCartOpen]);
+
   if (!isCartOpen) return null;
 
   const handleApplyCoupon = (e: React.FormEvent) => {
@@ -44,12 +62,13 @@ export const CartDrawer: React.FC = () => {
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-warmbrown-950/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-warmbrown-950/70 backdrop-blur-sm transition-opacity"
         onClick={() => setIsCartOpen(false)}
+        aria-hidden="true"
       />
 
       {/* Slide-over Drawer Panel */}
-      <div className="relative w-full max-w-md bg-cream-50 h-full shadow-2xl flex flex-col justify-between z-10 animate-slide-left">
+      <div className="relative w-full max-w-md bg-cream-50 h-full shadow-2xl flex flex-col justify-between z-10 animate-slide-right overflow-hidden">
         {/* Drawer Header */}
         <div className="p-4 sm:p-5 border-b border-sandstone-200 flex items-center justify-between bg-cream-100">
           <div className="flex items-center space-x-2">
@@ -60,7 +79,7 @@ export const CartDrawer: React.FC = () => {
           </div>
           <button
             onClick={() => setIsCartOpen(false)}
-            className="p-1.5 text-warmbrown-700 hover:text-terracotta-600 rounded-full hover:bg-sandstone-200/50"
+            className="p-2 text-warmbrown-700 hover:text-terracotta-600 rounded-full hover:bg-sandstone-200/50 touch-target"
             aria-label="Close Cart"
           >
             <X className="w-5 h-5" />
@@ -150,30 +169,30 @@ export const CartDrawer: React.FC = () => {
                   </div>
 
                   {/* Quantity Stepper & Remove */}
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center border border-sandstone-300 rounded-md bg-sandstone-50">
+                  <div className="flex items-center justify-between mt-2.5">
+                    <div className="flex items-center border border-sandstone-300 rounded-lg bg-sandstone-50 overflow-hidden">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-1 text-warmbrown-700 hover:text-terracotta-600"
+                        className="px-2.5 py-1 text-warmbrown-700 hover:text-terracotta-600 touch-target font-bold"
                         aria-label="Decrease quantity"
                       >
-                        <Minus className="w-3 h-3" />
+                        <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="px-2 text-xs font-semibold text-warmbrown-900">
+                      <span className="px-2 text-xs font-bold text-warmbrown-900 min-w-[24px] text-center">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 text-warmbrown-700 hover:text-terracotta-600"
+                        className="px-2.5 py-1 text-warmbrown-700 hover:text-terracotta-600 touch-target font-bold"
                         aria-label="Increase quantity"
                       >
-                        <Plus className="w-3 h-3" />
+                        <Plus className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
                     <button
                       onClick={() => removeFromCart(item.id)}
-                      className="text-sandstone-400 hover:text-red-500 p-1 transition-colors"
+                      className="text-sandstone-400 hover:text-red-500 p-2 transition-colors touch-target"
                       aria-label="Remove item"
                       title="Remove"
                     >
@@ -188,7 +207,7 @@ export const CartDrawer: React.FC = () => {
 
         {/* Drawer Footer & Checkout Controls */}
         {cart.length > 0 && (
-          <div className="p-4 sm:p-5 border-t border-sandstone-200 bg-white space-y-3.5">
+          <div className="p-4 sm:p-5 border-t border-sandstone-200 bg-white space-y-3.5 pb-safe">
             {/* Coupon Code Input */}
             {appliedCoupon ? (
               <div className="flex items-center justify-between p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs">
@@ -214,7 +233,7 @@ export const CartDrawer: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-warmbrown-800 hover:bg-warmbrown-900 text-white px-3.5 py-2 rounded-r-md text-xs font-semibold tracking-wider transition-colors shrink-0"
+                  className="bg-warmbrown-800 hover:bg-warmbrown-900 text-white px-3.5 py-2 rounded-r-md text-xs font-semibold tracking-wider transition-colors shrink-0 touch-target"
                 >
                   APPLY
                 </button>
@@ -254,25 +273,23 @@ export const CartDrawer: React.FC = () => {
               <Link
                 href="/checkout"
                 onClick={() => setIsCartOpen(false)}
-                className="w-full bg-terracotta-600 hover:bg-terracotta-700 text-white py-3 rounded-lg text-xs sm:text-sm font-bold tracking-wider uppercase text-center flex items-center justify-center space-x-2 shadow-md transition-all"
+                className="w-full bg-terracotta-600 hover:bg-terracotta-700 text-white py-3.5 rounded-xl text-xs sm:text-sm font-bold tracking-wider uppercase text-center flex items-center justify-center space-x-2 shadow-md transition-all touch-target"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
-              <div className="flex items-center justify-center space-x-4 text-[11px] text-sandstone-500 pt-1">
-                <div className="flex items-center space-x-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Secure 256-Bit SSL</span>
-                </div>
-                <span>•</span>
-                <Link
-                  href="/cart"
-                  onClick={() => setIsCartOpen(false)}
-                  className="underline hover:text-warmbrown-900 font-medium"
-                >
-                  View Full Cart Page
-                </Link>
+              <Link
+                href="/cart"
+                onClick={() => setIsCartOpen(false)}
+                className="w-full bg-sandstone-100 hover:bg-sandstone-200 text-warmbrown-900 py-3 rounded-xl text-xs font-bold tracking-wider uppercase text-center flex items-center justify-center transition-colors touch-target"
+              >
+                <span>View Full Shopping Bag</span>
+              </Link>
+
+              <div className="flex items-center justify-center space-x-2 text-[10px] text-sandstone-500 pt-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Encrypted 256-Bit SSL Checkout Protection</span>
               </div>
             </div>
           </div>
