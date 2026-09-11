@@ -47,6 +47,8 @@ interface StoreContextType {
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
+const STORE_DATA_VERSION = '2.0.0_inr';
+
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(PRODUCTS);
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
@@ -55,23 +57,34 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [coupons, setCoupons] = useState<Coupon[]>(INITIAL_COUPONS);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize from LocalStorage if available
+  // Initialize from LocalStorage if available and matching current version
   useEffect(() => {
     try {
-      const savedProducts = localStorage.getItem('jpr_store_products');
-      if (savedProducts) setProducts(JSON.parse(savedProducts));
+      const storedVersion = localStorage.getItem('jpr_store_version');
+      if (storedVersion === STORE_DATA_VERSION) {
+        const savedProducts = localStorage.getItem('jpr_store_products');
+        if (savedProducts) setProducts(JSON.parse(savedProducts));
 
-      const savedOrders = localStorage.getItem('jpr_store_orders');
-      if (savedOrders) setOrders(JSON.parse(savedOrders));
+        const savedOrders = localStorage.getItem('jpr_store_orders');
+        if (savedOrders) setOrders(JSON.parse(savedOrders));
 
-      const savedQuotes = localStorage.getItem('jpr_store_quotes');
-      if (savedQuotes) setCustomQuotes(JSON.parse(savedQuotes));
+        const savedQuotes = localStorage.getItem('jpr_store_quotes');
+        if (savedQuotes) setCustomQuotes(JSON.parse(savedQuotes));
 
-      const savedReviews = localStorage.getItem('jpr_store_reviews');
-      if (savedReviews) setReviews(JSON.parse(savedReviews));
+        const savedReviews = localStorage.getItem('jpr_store_reviews');
+        if (savedReviews) setReviews(JSON.parse(savedReviews));
 
-      const savedCoupons = localStorage.getItem('jpr_store_coupons');
-      if (savedCoupons) setCoupons(JSON.parse(savedCoupons));
+        const savedCoupons = localStorage.getItem('jpr_store_coupons');
+        if (savedCoupons) setCoupons(JSON.parse(savedCoupons));
+      } else {
+        // Upgrade cache to new INR data version
+        localStorage.setItem('jpr_store_version', STORE_DATA_VERSION);
+        localStorage.setItem('jpr_store_products', JSON.stringify(PRODUCTS));
+        localStorage.setItem('jpr_store_orders', JSON.stringify(INITIAL_ORDERS));
+        localStorage.setItem('jpr_store_quotes', JSON.stringify(INITIAL_QUOTES));
+        localStorage.setItem('jpr_store_reviews', JSON.stringify(INITIAL_REVIEWS));
+        localStorage.setItem('jpr_store_coupons', JSON.stringify(INITIAL_COUPONS));
+      }
     } catch (e) {
       console.error('Failed to load store data from localStorage', e);
     }
@@ -81,6 +94,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Save to LocalStorage
   useEffect(() => {
     if (isInitialized) {
+      localStorage.setItem('jpr_store_version', STORE_DATA_VERSION);
       localStorage.setItem('jpr_store_products', JSON.stringify(products));
       localStorage.setItem('jpr_store_orders', JSON.stringify(orders));
       localStorage.setItem('jpr_store_quotes', JSON.stringify(customQuotes));

@@ -36,7 +36,7 @@ function ShopContent() {
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedStyles, setSelectedStyles] = useState<string[]>(initialStyle ? [initialStyle] : []);
-  const [priceRange, setPriceRange] = useState<number>(1500);
+  const [priceRange, setPriceRange] = useState<number>(60000);
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
   const [onSaleOnly, setOnSaleOnly] = useState<boolean>(false);
   const [minRating, setMinRating] = useState<number>(0);
@@ -409,16 +409,16 @@ function ShopContent() {
             </div>
             <input
               type="range"
-              min="30"
-              max="1500"
-              step="20"
+              min="800"
+              max="60000"
+              step="500"
               value={priceRange}
               onChange={(e) => setPriceRange(Number(e.target.value))}
               className="w-full accent-terracotta-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[11px] text-sandstone-500 mt-1">
-              <span>{formatPrice(30)}</span>
-              <span>{formatPrice(1500)}</span>
+            <div className="flex justify-between text-[11px] text-sandstone-500 mt-1 font-medium">
+              <span>{formatPrice(800)}</span>
+              <span>{formatPrice(60000)}</span>
             </div>
           </div>
 
@@ -659,16 +659,16 @@ function ShopContent() {
                 </div>
                 <input
                   type="range"
-                  min="30"
-                  max="1500"
-                  step="20"
+                  min="800"
+                  max="60000"
+                  step="500"
                   value={priceRange}
                   onChange={(e) => setPriceRange(Number(e.target.value))}
                   className="w-full accent-terracotta-600 cursor-pointer"
                 />
-                <div className="flex justify-between text-[10px] text-sandstone-500 mt-1">
-                  <span>{formatPrice(30)}</span>
-                  <span>{formatPrice(1500)}</span>
+                <div className="flex justify-between text-[10px] text-sandstone-500 mt-1 font-medium">
+                  <span>{formatPrice(800)}</span>
+                  <span>{formatPrice(60000)}</span>
                 </div>
               </div>
 

@@ -619,6 +619,42 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
       />
+
+      {/* Product Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: product.name,
+            image: product.images,
+            description: product.description,
+            sku: product.sku,
+            brand: {
+              '@type': 'Brand',
+              name: 'JaipurPinkCityRugs',
+            },
+            offers: {
+              '@type': 'Offer',
+              url: `https://jaipurpinkcityrugs.com/product/${product.slug}`,
+              priceCurrency: 'INR',
+              price: activePrice,
+              itemCondition: 'https://schema.org/NewCondition',
+              availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              seller: {
+                '@type': 'Organization',
+                name: 'JaipurPinkCityRugs',
+              },
+            },
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: product.rating,
+              reviewCount: product.reviewCount,
+            },
+          }),
+        }}
+      />
     </div>
   );
 }

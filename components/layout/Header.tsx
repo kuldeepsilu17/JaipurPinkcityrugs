@@ -88,24 +88,12 @@ export const Header: React.FC = () => {
 
           {/* Desktop Header View (>= lg) */}
           <div className="hidden lg:flex items-center justify-between gap-4">
-            {/* Left: Currency & Bespoke */}
+            {/* Left: Store Currency & Bespoke */}
             <div className="flex items-center space-x-3 w-1/4">
-              <div className="flex items-center space-x-2">
-                <label htmlFor="currency-select-desktop" className="sr-only">Select Currency</label>
-                <select
-                  id="currency-select-desktop"
-                  aria-label="Currency"
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-                  className="bg-transparent text-xs font-semibold text-warmbrown-800 hover:text-terracotta-600 border border-sandstone-300 rounded px-2 py-1 focus:border-terracotta-500 cursor-pointer"
-                >
-                  {Object.keys(CURRENCIES).map((c) => (
-                    <option key={c} value={c} className="bg-white text-warmbrown-900">
-                      {c} ({CURRENCIES[c as CurrencyCode].symbol})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <span className="inline-flex items-center space-x-1 text-xs font-semibold text-warmbrown-800 bg-sandstone-100/80 px-2.5 py-1 rounded-md border border-sandstone-200">
+                <span className="font-bold text-terracotta-700">₹ INR</span>
+                <span className="text-[10px] text-sandstone-500">• India</span>
+              </span>
 
               <Link
                 href="/custom-rugs"

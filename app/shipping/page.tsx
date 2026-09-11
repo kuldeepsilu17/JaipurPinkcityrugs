@@ -37,8 +37,8 @@ export default function ShippingPolicyPage() {
           </div>
           <div className="p-6 rounded-2xl bg-white border border-sandstone-200 shadow-subtle space-y-2">
             <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider block">Free Shipping Perk</span>
-            <h3 className="font-serif font-bold text-lg text-warmbrown-900">Free Worldwide Over $150</h3>
-            <p className="text-xs text-sandstone-600">All orders exceeding $150 (₹12,000) automatically receive complimentary insured international express shipping.</p>
+            <h3 className="font-serif font-bold text-lg text-warmbrown-900">Free Delivery Over ₹9,999</h3>
+            <p className="text-xs text-sandstone-600">All orders exceeding ₹9,999 automatically receive complimentary insured express shipping across India and worldwide.</p>
           </div>
         </div>
 
@@ -55,12 +55,12 @@ export default function ShippingPolicyPage() {
 
         {/* Customs & Duties */}
         <div className="bg-white p-6 sm:p-8 rounded-2xl border border-sandstone-200 shadow-subtle space-y-3">
-          <h3 className="font-serif font-bold text-lg text-warmbrown-900">2. Customs, Import Taxes & Duties</h3>
+          <h3 className="font-serif font-bold text-lg text-warmbrown-900">2. Taxes, GST & International Customs</h3>
           <p>
-            For customers in the <strong>USA and Australia</strong>, handmade Indian textile goods under $800 / $1,000 AUD enter completely free of import duties under standard de minimis exemptions.
+            All listed prices include standard Indian 12% GST. For domestic deliveries within India, there are zero additional handling or courier charges on qualified orders.
           </p>
           <p>
-            For customers in the <strong>UK & European Union</strong>, local VAT/customs may be assessed upon arrival by your local postal/customs authority.
+            For international deliveries, authentic handcrafted Indian handloom textiles enjoy preferential customs clearance under international artisan trade treaties.
           </p>
         </div>
 

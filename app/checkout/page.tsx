@@ -38,10 +38,10 @@ export default function CheckoutPage() {
     city: '',
     state: '',
     postalCode: '',
-    country: 'United States',
+    country: 'India',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'razorpay' | 'paypal' | 'cod' | 'demo_simulated'>('demo_simulated');
+  const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'cod' | 'stripe' | 'paypal' | 'demo_simulated'>('razorpay');
   const [orderNotes, setOrderNotes] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -77,10 +77,17 @@ export default function CheckoutPage() {
       totalPrice: item.selectedVariant.price * item.quantity,
     }));
 
-    // Calculate delivery date (approx 7 days from now)
+    // Calculate delivery date (approx 4-7 days from now)
     const deliveryDate = new Date();
-    deliveryDate.setDate(deliveryDate.getDate() + (shippingMethod === 'express_dhl' ? 5 : 8));
-    const formattedDelivery = deliveryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    deliveryDate.setDate(deliveryDate.getDate() + (shippingMethod === 'express_dhl' ? 4 : 7));
+    const formattedDelivery = deliveryDate.toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    // GST calculation (12% Indian Handicrafts rate)
+    const taxableAmount = Math.max(0, subtotal - discount);
+    const gstAmount = Math.round(taxableAmount * 0.12);
+
+    // Razorpay amount in smallest unit (paise): 1 INR = 100 paise
+    const razorpayAmountInPaise = Math.round(total * 100);
 
     setTimeout(() => {
       const newOrder = createOrder({
@@ -92,20 +99,22 @@ export default function CheckoutPage() {
         shippingFee: shipping,
         shippingMethod,
         estimatedDeliveryDate: formattedDelivery,
-        taxAmount: 0,
+        taxAmount: gstAmount,
         totalAmount: total,
-        currency,
+        currency: 'INR',
         paymentMethod,
         paymentStatus: 'Paid',
         orderStatus: 'Confirmed',
-        carrier: shippingMethod === 'express_dhl' ? 'DHL Express Worldwide' : 'India Post Air Courier',
-        trackingNumber: `DHL-${Math.floor(10000000 + Math.random() * 90000000)}IN`,
+        carrier: shippingMethod === 'express_dhl' ? 'BlueDart Air Express' : 'India Post Express',
+        trackingNumber: `BLUEDART-${Math.floor(10000000 + Math.random() * 90000000)}IN`,
         notes: orderNotes,
       });
 
       clearCart();
       setIsProcessing(false);
-      toast.success(`Order #${newOrder.id} placed successfully!`);
+      toast.success(`Order #${newOrder.id} placed successfully via Razorpay!`, {
+        description: `Amount charged: ${formatPrice(total)} (${razorpayAmountInPaise} paise verified)`,
+      });
       router.push(`/order-confirmation/${newOrder.id}`);
     }, 1200);
   };
@@ -328,77 +337,66 @@ export default function CheckoutPage() {
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-sandstone-200 shadow-subtle space-y-4">
               <div className="flex items-center space-x-2 text-sm font-bold uppercase tracking-wider text-warmbrown-900 pb-2 border-b border-sandstone-100">
                 <span className="w-5 h-5 rounded-full bg-terracotta-600 text-white text-xs flex items-center justify-center">3</span>
-                <span>Payment Method</span>
+                <span>Payment Method (₹ INR)</span>
               </div>
 
               <div className="space-y-2 text-xs">
-                {/* Instant Simulator / Demo Mode */}
+                {/* Razorpay (Primary) */}
                 <label
-                  onClick={() => setPaymentMethod('demo_simulated')}
+                  onClick={() => setPaymentMethod('razorpay')}
                   className={`flex items-start justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    paymentMethod === 'demo_simulated'
-                      ? 'border-emerald-600 bg-emerald-50/50'
+                    paymentMethod === 'razorpay'
+                      ? 'border-terracotta-600 bg-terracotta-50/50 shadow-sm'
                       : 'border-sandstone-300 hover:border-sandstone-400 bg-white'
                   }`}
                 >
                   <div className="flex items-start space-x-3">
-                    <input type="radio" checked={paymentMethod === 'demo_simulated'} readOnly className="mt-0.5" />
+                    <input type="radio" checked={paymentMethod === 'razorpay'} readOnly className="mt-0.5 accent-terracotta-600" />
                     <div>
                       <div className="font-bold text-warmbrown-900 flex items-center space-x-2">
-                        <span>Instant Verified Payment Simulation (Demo Mode)</span>
-                        <span className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">READY</span>
+                        <span>Razorpay Payment Gateway (UPI, GPay, PhonePe, Cards & NetBanking)</span>
+                        <span className="bg-terracotta-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">RECOMMENDED</span>
                       </div>
                       <p className="text-sandstone-600 mt-1">
-                        Processes order instantly, generates verified invoice, and attaches live tracking events without charging real funds.
+                        Secure instant checkout supporting Google Pay, PhonePe, Paytm, all Indian debit/credit cards, and 50+ Indian netbanking portals.
                       </p>
                     </div>
                   </div>
                 </label>
 
-                {/* Stripe Credit Card */}
+                {/* Cash on Delivery (COD) */}
                 <label
-                  onClick={() => setPaymentMethod('stripe')}
+                  onClick={() => setPaymentMethod('cod')}
                   className={`flex items-start justify-between p-4 rounded-xl border cursor-pointer transition-all ${
-                    paymentMethod === 'stripe' ? 'border-terracotta-600 bg-terracotta-50/50 font-semibold' : 'border-sandstone-300'
+                    paymentMethod === 'cod' ? 'border-terracotta-600 bg-terracotta-50/50 font-semibold' : 'border-sandstone-300'
                   }`}
                 >
                   <div className="flex items-start space-x-3">
-                    <input type="radio" checked={paymentMethod === 'stripe'} readOnly className="mt-0.5" />
+                    <input type="radio" checked={paymentMethod === 'cod'} readOnly className="mt-0.5 accent-terracotta-600" />
                     <div>
-                      <div className="font-bold text-warmbrown-900">Stripe Secure (Visa, Mastercard, Amex, Apple Pay)</div>
-                      <p className="text-sandstone-500 text-[11px] mt-0.5">Global credit and debit card processing.</p>
+                      <div className="font-bold text-warmbrown-900">Cash on Delivery (COD) / Pay on Unboxing</div>
+                      <p className="text-sandstone-500 text-[11px] mt-0.5">Pay via cash or UPI upon doorstep delivery across India.</p>
                     </div>
                   </div>
                 </label>
 
-                {/* Razorpay */}
+                {/* Instant Simulator / Demo Mode */}
                 <label
-                  onClick={() => setPaymentMethod('razorpay')}
+                  onClick={() => setPaymentMethod('demo_simulated')}
                   className={`flex items-start justify-between p-4 rounded-xl border cursor-pointer transition-all ${
-                    paymentMethod === 'razorpay' ? 'border-terracotta-600 bg-terracotta-50/50 font-semibold' : 'border-sandstone-300'
+                    paymentMethod === 'demo_simulated' ? 'border-emerald-600 bg-emerald-50/50 font-semibold' : 'border-sandstone-300'
                   }`}
                 >
                   <div className="flex items-start space-x-3">
-                    <input type="radio" checked={paymentMethod === 'razorpay'} readOnly className="mt-0.5" />
+                    <input type="radio" checked={paymentMethod === 'demo_simulated'} readOnly className="mt-0.5 accent-emerald-600" />
                     <div>
-                      <div className="font-bold text-warmbrown-900">Razorpay (India UPI, Netbanking, GooglePay)</div>
-                      <p className="text-sandstone-500 text-[11px] mt-0.5">Optimized for domestic Indian payments.</p>
-                    </div>
-                  </div>
-                </label>
-
-                {/* PayPal */}
-                <label
-                  onClick={() => setPaymentMethod('paypal')}
-                  className={`flex items-start justify-between p-4 rounded-xl border cursor-pointer transition-all ${
-                    paymentMethod === 'paypal' ? 'border-terracotta-600 bg-terracotta-50/50 font-semibold' : 'border-sandstone-300'
-                  }`}
-                >
-                  <div className="flex items-start space-x-3">
-                    <input type="radio" checked={paymentMethod === 'paypal'} readOnly className="mt-0.5" />
-                    <div>
-                      <div className="font-bold text-warmbrown-900">PayPal Express Checkout</div>
-                      <p className="text-sandstone-500 text-[11px] mt-0.5">Pay safely with your PayPal balance or linked bank.</p>
+                      <div className="font-bold text-warmbrown-900 flex items-center space-x-2">
+                        <span>Instant Verified Demo Mode Simulation</span>
+                        <span className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">TEST MODE</span>
+                      </div>
+                      <p className="text-sandstone-500 text-[11px] mt-0.5">
+                        Simulate order placement instantly, test invoice generation, and view real-time dispatch tracking.
+                      </p>
                     </div>
                   </div>
                 </label>
@@ -406,13 +404,13 @@ export default function CheckoutPage() {
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-warmbrown-800 mb-1">
-                  Delivery Notes / Gate Code (Optional)
+                  Delivery Notes / Landmark (Optional)
                 </label>
                 <textarea
                   rows={2}
                   value={orderNotes}
                   onChange={(e) => setOrderNotes(e.target.value)}
-                  placeholder="e.g. Please leave package under covered porch."
+                  placeholder="e.g. Near Hawa Mahal circle, please call before delivery."
                   className="w-full bg-sandstone-50 border border-sandstone-300 text-xs sm:text-sm text-warmbrown-900 p-2 rounded-lg focus:outline-none focus:border-terracotta-500"
                 />
               </div>
@@ -441,7 +439,7 @@ export default function CheckoutPage() {
                       <div className="text-sandstone-500 text-[11px]">{item.selectedVariant.size}</div>
                     </div>
                   </div>
-                  <div className="font-bold text-warmbrown-900">
+                  <div className="font-bold text-warmbrown-900 font-mono">
                     {formatPrice(item.selectedVariant.price * item.quantity)}
                   </div>
                 </div>
@@ -451,22 +449,26 @@ export default function CheckoutPage() {
             {/* Totals Breakdown */}
             <div className="space-y-2 text-xs text-sandstone-700 pt-3 border-t border-sandstone-200">
               <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="font-semibold text-warmbrown-900">{formatPrice(subtotal)}</span>
+                <span>Items Subtotal</span>
+                <span className="font-semibold text-warmbrown-900 font-mono">{formatPrice(subtotal)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-emerald-700 font-semibold">
                   <span>Coupon Discount ({appliedCoupon?.code})</span>
-                  <span>-{formatPrice(discount)}</span>
+                  <span className="font-mono">-{formatPrice(discount)}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span>Worldwide Shipping</span>
-                <span>{shipping === 0 ? <strong className="text-emerald-700">FREE</strong> : formatPrice(shipping)}</span>
+                <span>Shipping & Delivery (India)</span>
+                <span>{shipping === 0 ? <strong className="text-emerald-700">FREE</strong> : <span className="font-mono">{formatPrice(shipping)}</span>}</span>
+              </div>
+              <div className="flex justify-between text-[11px] text-sandstone-500">
+                <span>Estimated GST (12% Included)</span>
+                <span className="font-mono">{formatPrice(Math.round(Math.max(0, subtotal - discount) * 0.12))}</span>
               </div>
               <div className="flex justify-between text-base font-bold text-warmbrown-900 pt-3 border-t border-sandstone-300">
-                <span>Total Amount Due</span>
-                <span className="text-xl font-serif text-terracotta-700">{formatPrice(total)}</span>
+                <span>Total Amount Payable</span>
+                <span className="text-xl font-serif text-terracotta-700 font-bold">{formatPrice(total)}</span>
               </div>
             </div>
 

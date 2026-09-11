@@ -1,68 +1,43 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 import { CurrencyCode, CurrencyConfig } from '@/types';
+import { STORE_CURRENCY, STORE_CURRENCY_SYMBOL, STORE_LOCALE, formatINR } from '@/lib/currency';
+
+export { STORE_CURRENCY, STORE_CURRENCY_SYMBOL, STORE_LOCALE, formatINR };
 
 export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
-  USD: {
-    code: 'USD',
-    symbol: '$',
-    rate: 1.0,
-    format: (amt: number) => `$${amt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`,
-  },
   INR: {
     code: 'INR',
     symbol: '₹',
-    rate: 86.5,
-    format: (amt: number) => `₹${Math.round(amt * 86.5).toLocaleString('en-IN')}`,
-  },
-  EUR: {
-    code: 'EUR',
-    symbol: '€',
-    rate: 0.92,
-    format: (amt: number) => `€${(amt * 0.92).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`,
-  },
-  GBP: {
-    code: 'GBP',
-    symbol: '£',
-    rate: 0.79,
-    format: (amt: number) => `£${(amt * 0.79).toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`,
+    rate: 1.0,
+    format: (amt: number) => formatINR(amt),
   },
 };
 
 interface CurrencyContextType {
   currency: CurrencyCode;
   setCurrency: (code: CurrencyCode) => void;
-  formatPrice: (amountUsd: number) => string;
-  convertPrice: (amountUsd: number) => number;
+  formatPrice: (amountInr: number | string | null | undefined) => string;
+  convertPrice: (amountInr: number) => number;
   symbol: string;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currency, setCurrencyState] = useState<CurrencyCode>('USD');
+  const currency: CurrencyCode = 'INR';
 
-  useEffect(() => {
-    const saved = localStorage.getItem('jpr_currency') as CurrencyCode;
-    if (saved && CURRENCIES[saved]) {
-      setCurrencyState(saved);
-    }
-  }, []);
-
-  const setCurrency = (code: CurrencyCode) => {
-    setCurrencyState(code);
-    localStorage.setItem('jpr_currency', code);
+  const setCurrency = (_code: CurrencyCode) => {
+    // Single currency INR is active across the store
   };
 
-  const formatPrice = (amountUsd: number): string => {
-    const config = CURRENCIES[currency] || CURRENCIES.USD;
-    return config.format(amountUsd);
+  const formatPrice = (amountInr: number | string | null | undefined): string => {
+    return formatINR(amountInr);
   };
 
-  const convertPrice = (amountUsd: number): number => {
-    const config = CURRENCIES[currency] || CURRENCIES.USD;
-    return Math.round(amountUsd * config.rate * 100) / 100;
+  const convertPrice = (amountInr: number): number => {
+    return Number(amountInr) || 0;
   };
 
   return (
@@ -72,7 +47,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setCurrency,
         formatPrice,
         convertPrice,
-        symbol: CURRENCIES[currency]?.symbol || '$',
+        symbol: STORE_CURRENCY_SYMBOL,
       }}
     >
       {children}
@@ -83,7 +58,15 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 export const useCurrency = (): CurrencyContextType => {
   const context = useContext(CurrencyContext);
   if (!context) {
-    throw new Error('useCurrency must be used within a CurrencyProvider');
+    // Return safe fallback if used outside provider
+    return {
+      currency: 'INR',
+      setCurrency: () => {},
+      formatPrice: formatINR,
+      convertPrice: (amt) => Number(amt) || 0,
+      symbol: '₹',
+    };
   }
   return context;
 };
+

@@ -1,16 +1,16 @@
-export type CurrencyCode = 'USD' | 'INR' | 'EUR' | 'GBP';
+export type CurrencyCode = 'INR';
 
 export interface CurrencyConfig {
   code: CurrencyCode;
   symbol: string;
-  rate: number; // Conversion rate relative to USD (1 USD base)
+  rate: number;
   format: (amount: number) => string;
 }
 
 export interface ProductVariant {
   id: string;
   size: string; // e.g. "2x3 ft", "3x5 ft", "4x6 ft", "5x7 ft", "6x9 ft", "8x10 ft", "9x12 ft", "Custom"
-  price: number; // in USD
+  price: number; // in INR (₹)
   compareAtPrice?: number;
   sku: string;
   stock: number;
@@ -26,7 +26,7 @@ export interface Product {
   category: string; // e.g. 'kilim-rugs', 'kilim-runners', 'stair-runners', 'pillow-covers', 'wool-rugs', 'jute-rugs', 'hemp-rugs', 'yoga-mats', 'cotton-home-decor', 'custom-rugs'
   categoryName: string;
   subcategory?: string;
-  price: number; // Base USD price
+  price: number; // Base INR (₹) price
   compareAtPrice?: number;
   images: string[];
   materials: string[]; // e.g. ["80% New Zealand Wool", "20% Organic Jute"]
@@ -100,7 +100,7 @@ export interface Coupon {
   id: string;
   code: string;
   discountType: 'percentage' | 'fixed';
-  discountValue: number; // 10 for 10%, or 20 for $20 off
+  discountValue: number; // 10 for 10%, or 2000 for ₹2,000 off
   minOrderAmount?: number;
   expiryDate: string;
   usageCount: number;
@@ -194,6 +194,7 @@ export interface CustomRugQuote {
   quantity: number;
   referenceImageUrl?: string;
   additionalNotes?: string;
+  estimatedPriceInr?: number;
   estimatedPriceUsd?: number;
   status: 'New' | 'Reviewing' | 'Quoted' | 'In Production' | 'Completed' | 'Archived';
 }

@@ -52,7 +52,7 @@ export const PrintableInvoice: React.FC<PrintableInvoiceProps> = ({ order }) => 
             <div className="font-mono text-base font-bold text-terracotta-700">
               INVOICE #{order.id}
             </div>
-            <div>Date: {new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+            <div>Date: {new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
             <div>Payment Method: <span className="uppercase font-semibold text-warmbrown-900">{order.paymentMethod}</span></div>
             <div>Payment Status: <span className="text-emerald-700 font-bold">{order.paymentStatus}</span></div>
           </div>
@@ -83,7 +83,7 @@ export const PrintableInvoice: React.FC<PrintableInvoiceProps> = ({ order }) => 
               Shipping & Tracking:
             </h4>
             <p className="text-sandstone-700">
-              <strong>Carrier:</strong> {order.carrier || 'DHL Express Worldwide'}<br />
+              <strong>Carrier:</strong> {order.carrier || 'BlueDart Express'}<br />
               <strong>Tracking Number:</strong> <span className="font-mono">{order.trackingNumber || 'Processing Assignment'}</span><br />
               <strong>Estimated Arrival:</strong> {order.estimatedDeliveryDate}<br />
               <strong>Current Status:</strong> <span className="font-semibold text-terracotta-700">{order.orderStatus}</span>
@@ -131,7 +131,7 @@ export const PrintableInvoice: React.FC<PrintableInvoiceProps> = ({ order }) => 
         <div className="flex justify-end">
           <div className="w-full sm:w-72 space-y-2 text-xs text-sandstone-700">
             <div className="flex justify-between">
-              <span>Subtotal</span>
+              <span>Subtotal (Incl. 12% GST)</span>
               <span className="font-semibold text-warmbrown-900">{formatPrice(order.subtotal)}</span>
             </div>
             {order.discountAmount > 0 && (
@@ -141,7 +141,7 @@ export const PrintableInvoice: React.FC<PrintableInvoiceProps> = ({ order }) => 
               </div>
             )}
             <div className="flex justify-between">
-              <span>Worldwide Shipping</span>
+              <span>Express Shipping</span>
               <span>{order.shippingFee === 0 ? 'FREE' : formatPrice(order.shippingFee)}</span>
             </div>
             <div className="flex justify-between text-sm font-bold text-warmbrown-900 pt-2 border-t border-sandstone-300">
@@ -154,7 +154,7 @@ export const PrintableInvoice: React.FC<PrintableInvoiceProps> = ({ order }) => 
         {/* Certificate / Footer Note */}
         <div className="pt-6 border-t border-sandstone-200 text-center text-xs text-sandstone-500 space-y-1">
           <p className="font-semibold text-warmbrown-900">
-            Certified Authentic Handcrafted Rajasthani Textile • Zero Child Labor Guarantee
+            Certified Authentic Handcrafted Rajasthani Textile • GST Registered • Zero Child Labor Guarantee
           </p>
           <p>
             For care instructions, warranty, or custom weaving inquiries, email concierge@jaipurpinkcityrugs.com

@@ -339,7 +339,7 @@ export default function AdminProductsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-bold uppercase text-warmbrown-800 mb-1">Price (USD $)</label>
+                  <label className="block font-bold uppercase text-warmbrown-800 mb-1">Price (₹ INR)</label>
                   <input
                     type="number"
                     value={formPrice}
@@ -349,7 +349,7 @@ export default function AdminProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold uppercase text-warmbrown-800 mb-1">Compare Price (USD $)</label>
+                  <label className="block font-bold uppercase text-warmbrown-800 mb-1">Compare Price (₹ INR)</label>
                   <input
                     type="number"
                     value={formComparePrice}

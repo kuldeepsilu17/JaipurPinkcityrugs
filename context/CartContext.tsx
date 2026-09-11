@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Product, ProductVariant, CartItem, Coupon } from '@/types';
 import { INITIAL_COUPONS } from '@/data/coupons';
+import { formatINR } from '@/lib/currency';
 import { toast } from 'sonner';
 
 interface CartContextType {
@@ -35,7 +36,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const FREE_SHIPPING_THRESHOLD_USD = 150;
+const FREE_SHIPPING_THRESHOLD_INR = 9999;
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -47,13 +48,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Load from localStorage
   useEffect(() => {
     try {
-      const savedCart = localStorage.getItem('jpr_cart');
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
-      }
-      const savedCoupon = localStorage.getItem('jpr_applied_coupon');
-      if (savedCoupon) {
-        setAppliedCoupon(JSON.parse(savedCoupon));
+      const storedVersion = localStorage.getItem('jpr_cart_version');
+      if (storedVersion === '2.0.0_inr') {
+        const savedCart = localStorage.getItem('jpr_cart');
+        if (savedCart) {
+          setCart(JSON.parse(savedCart));
+        }
+        const savedCoupon = localStorage.getItem('jpr_applied_coupon');
+        if (savedCoupon) {
+          setAppliedCoupon(JSON.parse(savedCoupon));
+        }
+      } else {
+        localStorage.setItem('jpr_cart_version', '2.0.0_inr');
+        localStorage.removeItem('jpr_cart');
+        localStorage.removeItem('jpr_applied_coupon');
       }
     } catch (e) {
       console.error('Failed to load cart from localStorage', e);
@@ -159,7 +167,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     if (coupon.minOrderAmount && subtotal < coupon.minOrderAmount) {
-      toast.error(`Coupon requires a minimum order of $${coupon.minOrderAmount}`);
+      toast.error(`Coupon requires a minimum order of ${formatINR(coupon.minOrderAmount)}`);
       return false;
     }
 
@@ -185,7 +193,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const discount = useMemo(() => {
     if (!appliedCoupon || subtotal <= 0) return 0;
     if (appliedCoupon.discountType === 'percentage') {
-      return (subtotal * appliedCoupon.discountValue) / 100;
+      return Math.round((subtotal * appliedCoupon.discountValue) / 100);
     }
     if (appliedCoupon.discountType === 'fixed') {
       return Math.min(appliedCoupon.discountValue, subtotal);
@@ -195,8 +203,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const shipping = useMemo(() => {
     if (subtotal <= 0) return 0;
-    if (subtotal >= FREE_SHIPPING_THRESHOLD_USD) return 0;
-    return shippingMethod === 'express_dhl' ? 25 : 15;
+    if (subtotal >= FREE_SHIPPING_THRESHOLD_INR) return 0;
+    return shippingMethod === 'express_dhl' ? 999 : 499;
   }, [subtotal, shippingMethod]);
 
   const total = useMemo(() => {
@@ -223,7 +231,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         subtotal,
         discount,
         shipping,
-        freeShippingThreshold: FREE_SHIPPING_THRESHOLD_USD,
+        freeShippingThreshold: FREE_SHIPPING_THRESHOLD_INR,
         total,
         itemCount,
         shippingMethod,

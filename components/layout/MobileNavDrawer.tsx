@@ -97,21 +97,11 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
           </button>
         </div>
 
-        {/* Currency & Account Bar */}
+        {/* Store Currency & Account Bar */}
         <div className="px-4 py-2.5 bg-sandstone-100/70 border-b border-sandstone-200 flex items-center justify-between text-xs">
-          <div className="flex items-center space-x-2">
-            <span className="text-warmbrown-800 font-medium">Currency:</span>
-            <select
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-              className="bg-cream-50 text-xs font-semibold text-warmbrown-800 border border-sandstone-300 rounded px-2 py-1 cursor-pointer"
-            >
-              {Object.keys(CURRENCIES).map((c) => (
-                <option key={c} value={c}>
-                  {c} ({CURRENCIES[c as CurrencyCode].symbol})
-                </option>
-              ))}
-            </select>
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-warmbrown-800 bg-sandstone-200/60 px-2 py-0.5 rounded border border-sandstone-300">
+            <span className="font-bold text-terracotta-700">₹ INR</span>
+            <span className="text-[10px] text-sandstone-600">• India</span>
           </div>
 
           <div className="flex items-center space-x-3 text-warmbrown-700">

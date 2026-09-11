@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  DollarSign,
+  IndianRupee,
   ShoppingCart,
   Package,
   Ruler,
@@ -53,7 +53,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white p-5 rounded-2xl border border-sandstone-200 shadow-subtle space-y-1">
           <div className="flex items-center justify-between text-xs text-sandstone-500 font-semibold uppercase tracking-wider">
             <span>Total Revenue</span>
-            <DollarSign className="w-4 h-4 text-emerald-600" />
+            <IndianRupee className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="font-serif text-2xl font-bold text-warmbrown-900">
             {formatPrice(totalRevenue)}

@@ -7,10 +7,10 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { toast } from 'sonner';
 
 const WEAVE_TYPES = [
-  { id: 'kilim', name: 'Hand-Loomed Flatweave Kilim', material: '85% Indian Wool / 15% Cotton', pricePerSqFt: 11, image: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=400&q=80' },
-  { id: 'wool-knotted', name: 'Hand-Knotted 60-Knot Wool', material: '100% New Zealand & Bikaneri Wool', pricePerSqFt: 22, image: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=400&q=80' },
-  { id: 'jute-hemp', name: 'Organic Braided Golden Jute / Hemp', material: '100% Natural Golden Jute', pricePerSqFt: 8, image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=400&q=80' },
-  { id: 'stair-runner', name: 'Reinforced Heavy-Duty Stair Runner', material: 'Triple-Density Wool-Jute Blend', pricePerSqFt: 14, image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80' },
+  { id: 'kilim', name: 'Hand-Loomed Flatweave Kilim', material: '85% Indian Wool / 15% Cotton', pricePerSqFt: 850, image: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=400&q=80' },
+  { id: 'wool-knotted', name: 'Hand-Knotted 60-Knot Wool', material: '100% New Zealand & Bikaneri Wool', pricePerSqFt: 1800, image: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=400&q=80' },
+  { id: 'jute-hemp', name: 'Organic Braided Golden Jute / Hemp', material: '100% Natural Golden Jute', pricePerSqFt: 650, image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=400&q=80' },
+  { id: 'stair-runner', name: 'Reinforced Heavy-Duty Stair Runner', material: 'Triple-Density Wool-Jute Blend', pricePerSqFt: 1100, image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80' },
 ];
 
 const SHAPES = ['Rectangular', 'Runner (Long & Narrow)', 'Round / Circular', 'Oval', 'Square', 'Custom Stair Tread'];
@@ -39,11 +39,11 @@ export const CustomRugWizard: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [country, setCountry] = useState('United States');
+  const [country, setCountry] = useState('India');
   const [notes, setNotes] = useState('');
   const [submittedQuoteId, setSubmittedQuoteId] = useState<string | null>(null);
 
-  // Dynamic Price Calculation
+  // Dynamic Price Calculation in INR
   const widthNum = parseFloat(widthFeet) || 6;
   const lengthNum = parseFloat(lengthFeet) || 9;
   const sqFt = widthNum * lengthNum;
@@ -69,7 +69,7 @@ export const CustomRugWizard: React.FC = () => {
       material: selectedWeave.material,
       quantity,
       additionalNotes: notes,
-      estimatedPriceUsd: estimatedBasePrice,
+      estimatedPriceInr: estimatedBasePrice,
     });
 
     setSubmittedQuoteId(newQuote.id);
@@ -216,7 +216,7 @@ export const CustomRugWizard: React.FC = () => {
                     </h4>
                     <p className="text-[11px] text-sandstone-600 mt-0.5">{weave.material}</p>
                     <div className="text-xs font-bold text-terracotta-700 mt-1">
-                      From ${weave.pricePerSqFt} / sq. ft
+                      From {formatPrice(weave.pricePerSqFt)} / sq. ft
                     </div>
                   </div>
                 </div>
@@ -315,7 +315,7 @@ export const CustomRugWizard: React.FC = () => {
                   Total Surface Area: <span className="text-terracotta-700">{sqFt} sq. ft</span>
                 </div>
                 <div className="text-sandstone-600">
-                  Based on {selectedWeave.name} (${selectedWeave.pricePerSqFt}/sq.ft)
+                  Based on {selectedWeave.name} ({formatPrice(selectedWeave.pricePerSqFt)}/sq.ft)
                 </div>
               </div>
               <div className="text-right">
